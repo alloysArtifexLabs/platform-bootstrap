@@ -1,0 +1,26 @@
+# A child Application discovered by the root app.
+# This deploys the devsecops-demo app from your other repo
+# into the dev namespace — demonstrating the platform managing
+# a real workload from Git.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devsecops-demo
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/alloysArtifexLabs/devsecops-k8s-pipeline
+    targetRevision: main
+    path: k8s/overlays/dev
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

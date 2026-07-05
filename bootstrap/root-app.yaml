@@ -1,0 +1,31 @@
+# The "app of apps" root Application.
+# This single Application tells ArgoCD to watch the 'apps/' folder
+# in this repo. Any Application manifest placed there is automatically
+# discovered and deployed — no manual apply needed.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app
+  namespace: argocd
+  # This finalizer ensures child apps are cleaned up if root is deleted
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/alloysArtifexLabs/platform-bootstrap
+    targetRevision: main
+    path: apps          # ArgoCD watches this folder for Application manifests
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true       # remove apps deleted from Git
+      selfHeal: true    # revert manual changes
+    syncOptions:
+      - CreateNamespace=true
