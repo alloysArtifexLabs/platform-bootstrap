@@ -8,3 +8,5 @@ crash.log
 
 # kind kubeconfig
 kubeconfig
+platform-config
+platform-config.*
